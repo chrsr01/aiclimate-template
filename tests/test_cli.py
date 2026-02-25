@@ -8,11 +8,11 @@ from pathlib import Path
 import pytest
 from click.testing import CliRunner
 
-from cookiecutter import utils
-from cookiecutter.cli import main
-from cookiecutter.environment import StrictEnvironment
-from cookiecutter.exceptions import UnknownExtension
-from cookiecutter.main import cookiecutter
+from aiclimate import utils
+from aiclimate.cli import main
+from aiclimate.environment import StrictEnvironment
+from aiclimate.exceptions import UnknownExtension
+from aiclimate.main import generate_project
 
 
 @pytest.fixture(scope='session')
@@ -69,7 +69,7 @@ def test_cli_version(cli_runner, version_cli_flag) -> None:
     """Verify Cookiecutter version output by `cookiecutter` on cli invocation."""
     result = cli_runner(version_cli_flag)
     assert result.exit_code == 0
-    assert result.output.startswith('Cookiecutter')
+    assert result.output.startswith('aiclimate')
 
 
 @pytest.mark.usefixtures('make_fake_project_dir', 'remove_fake_project_dir')
@@ -104,13 +104,13 @@ def test_cli_verbose(cli_runner) -> None:
 @pytest.mark.usefixtures('remove_fake_project_dir')
 def test_cli_replay(mocker, cli_runner) -> None:
     """Test cli invocation display log with `verbose` and `replay` flags."""
-    mock_cookiecutter = mocker.patch('cookiecutter.cli.cookiecutter')
+    mock_generate_project = mocker.patch('aiclimate.cli.generate_project')
 
     template_path = 'tests/fake-repo-pre/'
     result = cli_runner(template_path, '--replay', '-v')
 
     assert result.exit_code == 0
-    mock_cookiecutter.assert_called_once_with(
+    mock_generate_project.assert_called_once_with(
         template_path,
         None,
         False,
@@ -131,13 +131,13 @@ def test_cli_replay(mocker, cli_runner) -> None:
 @pytest.mark.usefixtures('remove_fake_project_dir')
 def test_cli_replay_file(mocker, cli_runner) -> None:
     """Test cli invocation correctly pass --replay-file option."""
-    mock_cookiecutter = mocker.patch('cookiecutter.cli.cookiecutter')
+    mock_generate_project = mocker.patch('aiclimate.cli.generate_project')
 
     template_path = 'tests/fake-repo-pre/'
     result = cli_runner(template_path, '--replay-file', '~/custom-replay-file', '-v')
 
     assert result.exit_code == 0
-    mock_cookiecutter.assert_called_once_with(
+    mock_generate_project.assert_called_once_with(
         template_path,
         None,
         False,
@@ -174,8 +174,8 @@ def test_cli_replay_generated(cli_runner) -> None:
 @pytest.mark.usefixtures('remove_fake_project_dir')
 def test_cli_exit_on_noinput_and_replay(mocker, cli_runner) -> None:
     """Test cli invocation fail if both `no-input` and `replay` flags passed."""
-    mock_cookiecutter = mocker.patch(
-        'cookiecutter.cli.cookiecutter', side_effect=cookiecutter
+    mock_generate_project = mocker.patch(
+        'aiclimate.cli.generate_project', side_effect=generate_project
     )
 
     template_path = 'tests/fake-repo-pre/'
@@ -189,7 +189,7 @@ def test_cli_exit_on_noinput_and_replay(mocker, cli_runner) -> None:
 
     assert expected_error_msg in result.output
 
-    mock_cookiecutter.assert_called_once_with(
+    mock_generate_project.assert_called_once_with(
         template_path,
         None,
         True,
@@ -218,14 +218,14 @@ def test_run_cookiecutter_on_overwrite_if_exists_and_replay(
     mocker, cli_runner, overwrite_cli_flag
 ) -> None:
     """Test cli invocation with `overwrite-if-exists` and `replay` flags."""
-    mock_cookiecutter = mocker.patch('cookiecutter.cli.cookiecutter')
+    mock_generate_project = mocker.patch('aiclimate.cli.generate_project')
 
     template_path = 'tests/fake-repo-pre/'
     result = cli_runner(template_path, '--replay', '-v', overwrite_cli_flag)
 
     assert result.exit_code == 0
 
-    mock_cookiecutter.assert_called_once_with(
+    mock_generate_project.assert_called_once_with(
         template_path,
         None,
         False,
@@ -278,13 +278,13 @@ def output_dir_flag(request):
 
 def test_cli_output_dir(mocker, cli_runner, output_dir_flag, output_dir) -> None:
     """Test cli invocation with `output-dir` flag changes output directory."""
-    mock_cookiecutter = mocker.patch('cookiecutter.cli.cookiecutter')
+    mock_generate_project = mocker.patch('aiclimate.cli.generate_project')
 
     template_path = 'tests/fake-repo-pre/'
     result = cli_runner(template_path, output_dir_flag, output_dir)
 
     assert result.exit_code == 0
-    mock_cookiecutter.assert_called_once_with(
+    mock_generate_project.assert_called_once_with(
         template_path,
         None,
         False,
@@ -323,13 +323,13 @@ def user_config_path(tmp_path):
 
 def test_user_config(mocker, cli_runner, user_config_path) -> None:
     """Test cli invocation works with `config-file` option."""
-    mock_cookiecutter = mocker.patch('cookiecutter.cli.cookiecutter')
+    mock_generate_project = mocker.patch('aiclimate.cli.generate_project')
 
     template_path = 'tests/fake-repo-pre/'
     result = cli_runner(template_path, '--config-file', user_config_path)
 
     assert result.exit_code == 0
-    mock_cookiecutter.assert_called_once_with(
+    mock_generate_project.assert_called_once_with(
         template_path,
         None,
         False,
@@ -349,7 +349,7 @@ def test_user_config(mocker, cli_runner, user_config_path) -> None:
 
 def test_default_user_config_overwrite(mocker, cli_runner, user_config_path) -> None:
     """Test cli invocation ignores `config-file` if `default-config` passed."""
-    mock_cookiecutter = mocker.patch('cookiecutter.cli.cookiecutter')
+    mock_generate_project = mocker.patch('aiclimate.cli.generate_project')
 
     template_path = 'tests/fake-repo-pre/'
     result = cli_runner(
@@ -360,7 +360,7 @@ def test_default_user_config_overwrite(mocker, cli_runner, user_config_path) -> 
     )
 
     assert result.exit_code == 0
-    mock_cookiecutter.assert_called_once_with(
+    mock_generate_project.assert_called_once_with(
         template_path,
         None,
         False,
@@ -380,13 +380,13 @@ def test_default_user_config_overwrite(mocker, cli_runner, user_config_path) -> 
 
 def test_default_user_config(mocker, cli_runner) -> None:
     """Test cli invocation accepts `default-config` flag correctly."""
-    mock_cookiecutter = mocker.patch('cookiecutter.cli.cookiecutter')
+    mock_generate_project = mocker.patch('aiclimate.cli.generate_project')
 
     template_path = 'tests/fake-repo-pre/'
     result = cli_runner(template_path, '--default-config')
 
     assert result.exit_code == 0
-    mock_cookiecutter.assert_called_once_with(
+    mock_generate_project.assert_called_once_with(
         template_path,
         None,
         False,
@@ -543,7 +543,7 @@ def test_debug_file_non_verbose(cli_runner, debug_file) -> None:
     assert debug_file.exists()
 
     context_log = (
-        "DEBUG cookiecutter.main: context_file is "
+        "DEBUG aiclimate.main: context_file is "
         "tests/fake-repo-pre/cookiecutter.json"
     )
     assert context_log in debug_file.read_text()
@@ -570,7 +570,7 @@ def test_debug_file_verbose(cli_runner, debug_file) -> None:
     assert debug_file.exists()
 
     context_log = (
-        "DEBUG cookiecutter.main: context_file is "
+        "DEBUG aiclimate.main: context_file is "
         "tests/fake-repo-pre/cookiecutter.json"
     )
     assert context_log in debug_file.read_text()
@@ -585,7 +585,7 @@ def test_debug_list_installed_templates(
     fake_template_dir = os.path.dirname(os.path.abspath('fake-project'))
     os.makedirs(os.path.dirname(user_config_path))
     # Single quotes in YAML will not parse escape codes (\).
-    Path(user_config_path).write_text(f"cookiecutters_dir: '{fake_template_dir}'")
+    Path(user_config_path).write_text(f"templates_dir: '{fake_template_dir}'")
     Path("fake-project", "cookiecutter.json").write_text('{}')
 
     result = cli_runner(
@@ -604,7 +604,7 @@ def test_debug_list_installed_templates_failure(
 ) -> None:
     """Verify --list-installed command error on invocation."""
     os.makedirs(os.path.dirname(user_config_path))
-    Path(user_config_path).write_text('cookiecutters_dir: "/notarealplace/"')
+    Path(user_config_path).write_text('templates_dir: "/notarealplace/"')
 
     result = cli_runner(
         '--list-installed', '--config-file', user_config_path, str(debug_file)
@@ -650,7 +650,7 @@ def test_cli_accept_hooks(
     expected,
 ) -> None:
     """Test cli invocation works with `accept-hooks` option."""
-    mock_cookiecutter = mocker.patch("cookiecutter.cli.cookiecutter")
+    mock_generate_project = mocker.patch("aiclimate.cli.generate_project")
 
     template_path = "tests/fake-repo-pre/"
     result = cli_runner(
@@ -658,7 +658,7 @@ def test_cli_accept_hooks(
     )
 
     assert result.exit_code == 0
-    mock_cookiecutter.assert_called_once_with(
+    mock_generate_project.assert_called_once_with(
         template_path,
         None,
         False,

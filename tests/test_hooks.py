@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from cookiecutter import exceptions, hooks, utils
+from aiclimate import exceptions, hooks, utils
 
 
 def make_test_repo(name: str, multiple_hooks: bool = False) -> str:

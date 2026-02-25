@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data (large files - use DVC or git-lfs)
+data/raw/*
+data/processed/*
+data/external/*
+!data/**/.gitkeep
+
+# Models (large files)
+models/*
+!models/.gitkeep
+
+# Experiments
+experiments/*
+!experiments/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+*.log
+
+# Coverage
+.coverage
+htmlcov/

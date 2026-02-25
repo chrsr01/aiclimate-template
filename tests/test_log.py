@@ -4,16 +4,16 @@ import logging
 
 import pytest
 
-from cookiecutter.log import configure_logger
+from aiclimate.log import configure_logger
 
 
 def create_log_records() -> None:
     """Test function, create log entries in expected stage of test."""
-    cookiecutter_logger = logging.getLogger('cookiecutter')
-    foo_logger = logging.getLogger('cookiecutter.foo')
-    foobar_logger = logging.getLogger('cookiecutter.foo.bar')
+    cookiecutter_logger = logging.getLogger('aiclimate')
+    foo_logger = logging.getLogger('aiclimate.foo')
+    foobar_logger = logging.getLogger('aiclimate.foo.bar')
 
-    cookiecutter_logger.info('Welcome to Cookiecutter')
+    cookiecutter_logger.info('Welcome to aiclimate')
     cookiecutter_logger.debug('Generating project from pytest-plugin')
     foo_logger.info('Loading user config from home dir')
     foobar_logger.debug("I don't know.")
@@ -26,7 +26,7 @@ def create_log_records() -> None:
 def info_messages():
     """Fixture. List of test info messages."""
     return [
-        'INFO: Welcome to Cookiecutter',
+        'INFO: Welcome to aiclimate',
         'INFO: Loading user config from home dir',
         'ERROR: Aw, snap! Something went wrong',
     ]
@@ -36,25 +36,25 @@ def info_messages():
 def debug_messages():
     """Fixture. List of test debug messages."""
     return [
-        "INFO cookiecutter: Welcome to Cookiecutter",
-        "DEBUG cookiecutter: Generating project from pytest-plugin",
-        "INFO cookiecutter.foo: Loading user config from home dir",
-        "DEBUG cookiecutter.foo.bar: I don't know.",
-        "DEBUG cookiecutter.foo.bar: I wanted to save the world.",
-        "ERROR cookiecutter.foo: Aw, snap! Something went wrong",
-        "DEBUG cookiecutter: Successfully generated project",
+        "INFO aiclimate: Welcome to aiclimate",
+        "DEBUG aiclimate: Generating project from pytest-plugin",
+        "INFO aiclimate.foo: Loading user config from home dir",
+        "DEBUG aiclimate.foo.bar: I don't know.",
+        "DEBUG aiclimate.foo.bar: I wanted to save the world.",
+        "ERROR aiclimate.foo: Aw, snap! Something went wrong",
+        "DEBUG aiclimate: Successfully generated project",
     ]
 
 
 @pytest.fixture
 def info_logger():
-    """Fixture. Call cookiecutter logger setup with `info` debug level."""
+    """Fixture. Call aiclimate logger setup with `info` debug level."""
     return configure_logger(stream_level='INFO')
 
 
 @pytest.fixture
 def debug_logger():
-    """Fixture. Call cookiecutter logger setup with `debug` debug level."""
+    """Fixture. Call aiclimate logger setup with `debug` debug level."""
     return configure_logger(stream_level='DEBUG')
 
 
@@ -66,7 +66,7 @@ def debug_file(tmp_path):
 
 @pytest.fixture
 def info_logger_with_file(debug_file):
-    """Fixture. Call cookiecutter logger setup with `info` debug level + `file`."""
+    """Fixture. Call aiclimate logger setup with `info` debug level + `file`."""
     return configure_logger(stream_level='INFO', debug_file=str(debug_file))
 
 

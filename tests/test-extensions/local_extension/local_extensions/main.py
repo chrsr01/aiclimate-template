@@ -3,7 +3,7 @@
 from jinja2 import Environment
 from jinja2.ext import Extension
 
-from cookiecutter.utils import simple_filter
+from aiclimate.utils import simple_filter
 
 
 class FoobarExtension(Extension):

@@ -5,14 +5,14 @@ import shutil
 
 import pytest
 
-from cookiecutter import config
-from cookiecutter.exceptions import InvalidConfiguration
+from aiclimate import config
+from aiclimate.exceptions import InvalidConfiguration
 
 
 @pytest.fixture(scope='module')
 def user_config_path():
     """Fixture. Return user config path for current user."""
-    return os.path.expanduser('~/.cookiecutterrc')
+    return os.path.expanduser('~/.aiclimaterc')
 
 
 @pytest.fixture(scope='function')
@@ -20,20 +20,20 @@ def back_up_rc(user_config_path):
     """
     Back up an existing cookiecutter rc and restore it after the test.
 
-    If ~/.cookiecutterrc is pre-existing, move it to a temp location
+    If ~/.aiclimaterc is pre-existing, move it to a temp location
     """
-    user_config_path_backup = os.path.expanduser('~/.cookiecutterrc.backup')
+    user_config_path_backup = os.path.expanduser('~/.aiclimaterc.backup')
 
     if os.path.exists(user_config_path):
         shutil.copy(user_config_path, user_config_path_backup)
         os.remove(user_config_path)
 
     yield
-    # Remove the ~/.cookiecutterrc that has been created in the test.
+    # Remove the ~/.aiclimaterc that has been created in the test.
     if os.path.exists(user_config_path):
         os.remove(user_config_path)
 
-    # If it existed, restore the original ~/.cookiecutterrc.
+    # If it existed, restore the original ~/.aiclimaterc.
     if os.path.exists(user_config_path_backup):
         shutil.copy(user_config_path_backup, user_config_path)
         os.remove(user_config_path_backup)
@@ -56,7 +56,7 @@ def custom_config():
                 ],
             },
         },
-        'cookiecutters_dir': '/home/example/some-path-to-templates',
+        'templates_dir': '/home/example/some-path-to-templates',
         'replay_dir': '/home/example/some-path-to-replay-files',
         'abbreviations': {
             'gh': 'https://github.com/{0}.git',
@@ -115,7 +115,7 @@ def test_default_config_from_env_variable(
     monkeypatch, custom_config_path, custom_config
 ) -> None:
     """Validate app configuration. User config path should be parsed from sys env."""
-    monkeypatch.setenv('COOKIECUTTER_CONFIG', custom_config_path)
+    monkeypatch.setenv('AICLIMATE_CONFIG', custom_config_path)
 
     user_config = config.get_user_config()
     assert user_config == custom_config
@@ -143,7 +143,7 @@ def test_expand_user_for_directories_in_config(monkeypatch) -> None:
 
     user_config = config.get_user_config(config_file)
     assert user_config['replay_dir'] == 'Users/bob/replay-files'
-    assert user_config['cookiecutters_dir'] == 'Users/bob/templates'
+    assert user_config['templates_dir'] == 'Users/bob/templates'
 
 
 def test_expand_vars_for_directories_in_config(monkeypatch) -> None:
@@ -154,7 +154,7 @@ def test_expand_vars_for_directories_in_config(monkeypatch) -> None:
 
     user_config = config.get_user_config(config_file)
     assert user_config['replay_dir'] == 'Users/bob/cookies/replay-files'
-    assert user_config['cookiecutters_dir'] == 'Users/bob/cookies/templates'
+    assert user_config['templates_dir'] == 'Users/bob/cookies/templates'
 
 
 def test_specify_config_values() -> None:

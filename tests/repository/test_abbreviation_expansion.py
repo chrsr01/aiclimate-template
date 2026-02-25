@@ -2,8 +2,8 @@
 
 import pytest
 
-from cookiecutter.config import BUILTIN_ABBREVIATIONS
-from cookiecutter.repository import expand_abbreviations
+from aiclimate.config import BUILTIN_ABBREVIATIONS
+from aiclimate.repository import expand_abbreviations
 
 
 @pytest.mark.parametrize(

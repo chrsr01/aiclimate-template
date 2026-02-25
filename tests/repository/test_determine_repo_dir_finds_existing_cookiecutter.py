@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from cookiecutter import repository
+from aiclimate import repository
 
 
 @pytest.fixture
@@ -17,9 +17,9 @@ def template() -> str:
 @pytest.fixture
 def cloned_cookiecutter_path(user_config_data, template):
     """Fixture. Create fake project directory in special user folder."""
-    cookiecutters_dir = user_config_data['cookiecutters_dir']
+    templates_dir = user_config_data['templates_dir']
 
-    cloned_template_path = os.path.join(cookiecutters_dir, template)
+    cloned_template_path = os.path.join(templates_dir, template)
     os.mkdir(cloned_template_path)
 
     Path(cloned_template_path, "cookiecutter.json").touch()  # creates file
@@ -38,7 +38,7 @@ def test_should_find_existing_cookiecutter(
     project_dir, cleanup = repository.determine_repo_dir(
         template=template,
         abbreviations={},
-        clone_to_dir=user_config_data['cookiecutters_dir'],
+        clone_to_dir=user_config_data['templates_dir'],
         checkout=None,
         no_input=True,
     )

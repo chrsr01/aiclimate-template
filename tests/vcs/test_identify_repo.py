@@ -2,7 +2,7 @@
 
 import pytest
 
-from cookiecutter import exceptions, vcs
+from aiclimate import exceptions, vcs
 
 
 @pytest.mark.parametrize(

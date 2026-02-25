@@ -2,7 +2,7 @@
 
 from jinja2.exceptions import UndefinedError
 
-from cookiecutter import exceptions
+from aiclimate import exceptions
 
 
 def test_undefined_variable_to_str() -> None:

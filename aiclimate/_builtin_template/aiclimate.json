@@ -1,0 +1,12 @@
+{
+    "project_name": "My Climate AI Project",
+    "project_slug": "{{ aiclimate.project_name|lower|replace(' ', '-')|replace('_', '-') }}",
+    "package_name": "{{ aiclimate.project_slug|replace('-', '_') }}",
+    "project_description": "An ML project for climate and environmental science research.",
+    "author_name": "Your Name",
+    "author_email": "your.name@example.com",
+    "python_version": ["3.12", "3.13", "3.11", "3.10"],
+    "ml_framework": ["pytorch", "tensorflow", "jax", "none"],
+    "include_dvc": ["yes", "no"],
+    "license": ["MIT", "Apache-2.0", "BSD-3-Clause", "GPL-3.0"]
+}

@@ -1,6 +1,6 @@
 """Collection of tests around cookiecutter's replay feature."""
 
-from cookiecutter.main import cookiecutter
+from aiclimate.main import generate_project
 
 
 def test_original_cookiecutter_options_preserved_in__cookiecutter(
@@ -14,8 +14,8 @@ def test_original_cookiecutter_options_preserved_in__cookiecutter(
     `context['_cookiecutter']`.
     """
     monkeypatch.chdir('tests/fake-repo-tmpl-_cookiecutter')
-    mock_generate_files = mocker.patch('cookiecutter.main.generate_files')
-    cookiecutter(
+    mock_generate_files = mocker.patch('aiclimate.main.generate_files')
+    generate_project(
         '.',
         no_input=True,
         replay=False,
@@ -45,10 +45,10 @@ def test_replay_dump_template_name(
     """
     monkeypatch.chdir('tests/fake-repo-tmpl')
 
-    mock_replay_dump = mocker.patch('cookiecutter.main.dump')
-    mocker.patch('cookiecutter.main.generate_files')
+    mock_replay_dump = mocker.patch('aiclimate.main.dump')
+    mocker.patch('aiclimate.main.generate_files')
 
-    cookiecutter(
+    generate_project(
         '.',
         no_input=True,
         replay=False,
@@ -74,14 +74,17 @@ def test_replay_load_template_name(
     """
     monkeypatch.chdir('tests/fake-repo-tmpl')
 
-    mock_replay_load = mocker.patch('cookiecutter.main.load')
-    mocker.patch('cookiecutter.main.generate_context').return_value = {
+    mock_replay_load = mocker.patch(
+        'aiclimate.main.load',
+        return_value={'cookiecutter': {}},
+    )
+    mocker.patch('aiclimate.main.generate_context').return_value = {
         'cookiecutter': {}
     }
-    mocker.patch('cookiecutter.main.generate_files')
-    mocker.patch('cookiecutter.main.dump')
+    mocker.patch('aiclimate.main.generate_files')
+    mocker.patch('aiclimate.main.dump')
 
-    cookiecutter(
+    generate_project(
         '.',
         replay=True,
         config_file=user_config_file,
@@ -97,14 +100,17 @@ def test_custom_replay_file(monkeypatch, mocker, user_config_file) -> None:
     """Check that reply.load is called with the custom replay_file."""
     monkeypatch.chdir('tests/fake-repo-tmpl')
 
-    mock_replay_load = mocker.patch('cookiecutter.main.load')
-    mocker.patch('cookiecutter.main.generate_context').return_value = {
+    mock_replay_load = mocker.patch(
+        'aiclimate.main.load',
+        return_value={'cookiecutter': {}},
+    )
+    mocker.patch('aiclimate.main.generate_context').return_value = {
         'cookiecutter': {}
     }
-    mocker.patch('cookiecutter.main.generate_files')
-    mocker.patch('cookiecutter.main.dump')
+    mocker.patch('aiclimate.main.generate_files')
+    mocker.patch('aiclimate.main.dump')
 
-    cookiecutter(
+    generate_project(
         '.',
         replay='./custom-replay-file',
         config_file=user_config_file,

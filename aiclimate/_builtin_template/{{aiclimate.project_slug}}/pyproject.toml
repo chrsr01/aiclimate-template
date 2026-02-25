@@ -1,0 +1,52 @@
+[project]
+name = "{{ aiclimate.project_slug }}"
+version = "0.1.0"
+description = "{{ aiclimate.project_description }}"
+authors = [{ name = "{{ aiclimate.author_name }}", email = "{{ aiclimate.author_email }}" }]
+requires-python = ">={{ aiclimate.python_version }}"
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "xarray>=2023.1",
+    "netCDF4>=1.6",
+    "scipy>=1.10",
+    "scikit-learn>=1.2",
+    "matplotlib>=3.7",
+    "seaborn>=0.12",
+{%- if aiclimate.ml_framework == "pytorch" %}
+    "torch>=2.0",
+    "lightning>=2.0",
+{%- elif aiclimate.ml_framework == "tensorflow" %}
+    "tensorflow>=2.12",
+{%- elif aiclimate.ml_framework == "jax" %}
+    "jax[cpu]>=0.4",
+    "flax>=0.7",
+{%- endif %}
+{%- if aiclimate.include_dvc == "yes" %}
+    "dvc>=3.0",
+{%- endif %}
+    "pyyaml>=6.0",
+    "tqdm>=4.65",
+    "loguru>=0.7",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.4",
+    "jupyter>=1.0",
+    "ipykernel>=6.0",
+]
+
+[tool.uv]
+package = true
+
+[tool.pytest.ini_options]
+testpaths = "tests"
+
+[tool.ruff]
+target-version = "py{{ aiclimate.python_version | replace('.', '') }}"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "UP", "B", "SIM"]

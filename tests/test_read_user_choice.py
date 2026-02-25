@@ -2,7 +2,7 @@
 
 import pytest
 
-from cookiecutter.prompt import read_user_choice
+from aiclimate.prompt import read_user_choice
 
 OPTIONS = ['hello', 'world', 'foo', 'bar']
 OPTIONS_INDEX = ['1', '2', '3', '4']

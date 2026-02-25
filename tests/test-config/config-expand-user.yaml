@@ -1,2 +1,2 @@
-cookiecutters_dir: "~/templates"
+templates_dir: "~/templates"
 replay_dir: "~/replay-files"

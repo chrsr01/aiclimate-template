@@ -1,0 +1,16 @@
+# Default experiment configuration
+experiment:
+  name: "default"
+  seed: 42
+
+data:
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+
+model:
+  type: "baseline"
+
+training:
+  epochs: 10
+  batch_size: 32
+  learning_rate: 0.001

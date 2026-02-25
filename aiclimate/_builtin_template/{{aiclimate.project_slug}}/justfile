@@ -1,0 +1,35 @@
+# List all recipes
+list:
+    just -l
+
+# Run tests
+test:
+    uv run pytest
+
+# Run tests with coverage
+coverage:
+    uv run pytest --cov={{ aiclimate.package_name }} --cov-report=term-missing
+
+# Lint code
+lint:
+    uv run ruff check . --fix
+
+# Check lint without fixing
+lint-check:
+    uv run ruff check --no-fix .
+
+# Format code
+format:
+    uv run ruff format .
+
+# Start Jupyter notebook server
+notebook:
+    uv run jupyter notebook notebooks/
+
+# Run training
+train *ARGS:
+    uv run python -m {{ aiclimate.package_name }}.train {{ARGS}}
+
+# Run evaluation
+evaluate *ARGS:
+    uv run python -m {{ aiclimate.package_name }}.evaluate {{ARGS}}

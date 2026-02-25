@@ -11,7 +11,7 @@ import sys
 
 import pytest
 
-from cookiecutter import utils
+from aiclimate import utils
 
 
 @pytest.fixture
@@ -32,7 +32,7 @@ def test_should_invoke_main(monkeypatch, project_dir) -> None:
         [
             sys.executable,
             '-m',
-            'cookiecutter.cli',
+            'aiclimate.cli',
             'tests/fake-repo-tmpl',
             '--no-input',
         ]

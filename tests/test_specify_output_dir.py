@@ -2,7 +2,7 @@
 
 import pytest
 
-from cookiecutter import main
+from aiclimate import main
 
 
 @pytest.fixture
@@ -30,26 +30,26 @@ def template(tmp_path):
 @pytest.fixture(autouse=True)
 def mock_gen_context(mocker, context) -> None:
     """Fixture. Automatically mock cookiecutter's function with expected output."""
-    mocker.patch('cookiecutter.main.generate_context', return_value=context)
+    mocker.patch('aiclimate.main.generate_context', return_value=context)
 
 
 @pytest.fixture(autouse=True)
 def mock_prompt(mocker) -> None:
     """Fixture. Automatically mock cookiecutter's function with expected output."""
-    mocker.patch('cookiecutter.main.prompt_for_config')
+    mocker.patch('aiclimate.main.prompt_for_config')
 
 
 @pytest.fixture(autouse=True)
 def mock_replay(mocker) -> None:
     """Fixture. Automatically mock cookiecutter's function with expected output."""
-    mocker.patch('cookiecutter.main.dump')
+    mocker.patch('aiclimate.main.dump')
 
 
 def test_api_invocation(mocker, template, output_dir, context) -> None:
     """Verify output dir location is correctly passed."""
-    mock_gen_files = mocker.patch('cookiecutter.main.generate_files')
+    mock_gen_files = mocker.patch('aiclimate.main.generate_files')
 
-    main.cookiecutter(template, output_dir=output_dir)
+    main.generate_project(template, output_dir=output_dir)
 
     mock_gen_files.assert_called_once_with(
         repo_dir=template,
@@ -64,9 +64,9 @@ def test_api_invocation(mocker, template, output_dir, context) -> None:
 
 def test_default_output_dir(mocker, template, context) -> None:
     """Verify default output dir is current working folder."""
-    mock_gen_files = mocker.patch('cookiecutter.main.generate_files')
+    mock_gen_files = mocker.patch('aiclimate.main.generate_files')
 
-    main.cookiecutter(template)
+    main.generate_project(template)
 
     mock_gen_files.assert_called_once_with(
         repo_dir=template,

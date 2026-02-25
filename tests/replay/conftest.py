@@ -25,4 +25,4 @@ def replay_test_dir() -> str:
 @pytest.fixture
 def mock_user_config(mocker):
     """Fixture to mock user config."""
-    return mocker.patch('cookiecutter.main.get_user_config')
+    return mocker.patch('aiclimate.main.get_user_config')

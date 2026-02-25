@@ -5,7 +5,7 @@ import os
 
 import pytest
 
-from cookiecutter import replay
+from aiclimate import replay
 
 
 @pytest.fixture
@@ -47,7 +47,7 @@ def mock_ensure_failure(mocker):
     Always return expected value: False
     """
     return mocker.patch(
-        'cookiecutter.replay.make_sure_path_exists', side_effect=OSError
+        'aiclimate.replay.make_sure_path_exists', side_effect=OSError
     )
 
 
@@ -58,7 +58,7 @@ def mock_ensure_success(mocker):
     Used to mock internal function and limit test scope.
     Always return expected value: True
     """
-    return mocker.patch('cookiecutter.replay.make_sure_path_exists', return_value=True)
+    return mocker.patch('aiclimate.replay.make_sure_path_exists', return_value=True)
 
 
 def test_ioerror_if_replay_dir_creation_fails(

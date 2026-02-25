@@ -7,8 +7,8 @@ from pathlib import Path
 
 import pytest
 
-from cookiecutter import generate, utils
-from cookiecutter.exceptions import FailedHookException
+from aiclimate import generate, utils
+from aiclimate.exceptions import FailedHookException
 
 WINDOWS = sys.platform.startswith('win')
 

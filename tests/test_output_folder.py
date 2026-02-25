@@ -10,7 +10,7 @@ from pathlib import Path
 
 import pytest
 
-from cookiecutter import exceptions, generate, utils
+from aiclimate import exceptions, generate, utils
 
 
 @pytest.fixture(scope='function')

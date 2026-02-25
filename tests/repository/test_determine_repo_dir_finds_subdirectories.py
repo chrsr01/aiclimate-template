@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from cookiecutter import exceptions, repository
+from aiclimate import exceptions, repository
 
 
 @pytest.fixture
@@ -17,9 +17,9 @@ def template() -> str:
 @pytest.fixture
 def cloned_cookiecutter_path(user_config_data, template):
     """Fixture. Prepare folder structure for tests in this file."""
-    cookiecutters_dir = user_config_data['cookiecutters_dir']
+    templates_dir = user_config_data['templates_dir']
 
-    cloned_template_path = os.path.join(cookiecutters_dir, template)
+    cloned_template_path = os.path.join(templates_dir, template)
     if not os.path.exists(cloned_template_path):
         os.mkdir(cloned_template_path)  # might exist from other tests.
 
@@ -38,7 +38,7 @@ def test_should_find_existing_cookiecutter(
     project_dir, cleanup = repository.determine_repo_dir(
         template=template,
         abbreviations={},
-        clone_to_dir=user_config_data['cookiecutters_dir'],
+        clone_to_dir=user_config_data['templates_dir'],
         checkout=None,
         no_input=True,
         directory='my-dir',
@@ -54,7 +54,7 @@ def test_local_repo_typo(template, user_config_data, cloned_cookiecutter_path) -
         repository.determine_repo_dir(
             template=template,
             abbreviations={},
-            clone_to_dir=user_config_data['cookiecutters_dir'],
+            clone_to_dir=user_config_data['templates_dir'],
             checkout=None,
             no_input=True,
             directory='wrong-dir',

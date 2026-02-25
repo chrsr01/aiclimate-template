@@ -10,7 +10,7 @@ import pytest
 from binaryornot.check import is_binary
 from jinja2 import Environment
 
-from cookiecutter import exceptions, generate
+from aiclimate import exceptions, generate
 
 
 def test_generate_files_nontemplated_exception(tmp_path) -> None:

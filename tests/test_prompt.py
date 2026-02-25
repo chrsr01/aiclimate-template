@@ -12,7 +12,7 @@ from typing import Any
 import click
 import pytest
 
-from cookiecutter import environment, exceptions, prompt
+from aiclimate import environment, exceptions, prompt
 
 
 @pytest.fixture(autouse=True)
@@ -39,7 +39,7 @@ class TestRenderVariable:
         """Verify simple items correctly rendered to strings."""
         env = environment.StrictEnvironment()
         from_string = mocker.patch(
-            'cookiecutter.utils.StrictEnvironment.from_string', wraps=env.from_string
+            'aiclimate.utils.StrictEnvironment.from_string', wraps=env.from_string
         )
         context = {'project': 'foobar'}
 
@@ -88,7 +88,7 @@ class TestPrompt:
     def test_prompt_for_config(self, monkeypatch, context) -> None:
         """Verify `prompt_for_config` call `read_user_variable` on text request."""
         monkeypatch.setattr(
-            'cookiecutter.prompt.read_user_variable',
+            'aiclimate.prompt.read_user_variable',
             lambda _var, default, _prompts, _prefix: default,
         )
 
@@ -115,15 +115,15 @@ class TestPrompt:
     def test_prompt_for_config_with_human_prompts(self, monkeypatch, context) -> None:
         """Verify call `read_user_variable` on request when human-readable prompts."""
         monkeypatch.setattr(
-            'cookiecutter.prompt.read_user_variable',
+            'aiclimate.prompt.read_user_variable',
             lambda _var, default, _prompts, _prefix: default,
         )
         monkeypatch.setattr(
-            'cookiecutter.prompt.read_user_yes_no',
+            'aiclimate.prompt.read_user_yes_no',
             lambda _var, default, _prompts, _prefix: default,
         )
         monkeypatch.setattr(
-            'cookiecutter.prompt.read_user_choice',
+            'aiclimate.prompt.read_user_choice',
             lambda _var, default, _prompts, _prefix: default,
         )
 
@@ -175,7 +175,7 @@ class TestPrompt:
     def test_prompt_for_config_dict(self, monkeypatch) -> None:
         """Verify `prompt_for_config` call `read_user_variable` on dict request."""
         monkeypatch.setattr(
-            'cookiecutter.prompt.read_user_dict',
+            'aiclimate.prompt.read_user_dict',
             lambda _var, _default, _prompts, _prefix: {"key": "value", "integer": 37},
         )
         context: dict[str, Any] = {'cookiecutter': {'details': {}}}
@@ -290,7 +290,7 @@ class TestPrompt:
     def test_prompt_for_templated_config(self, monkeypatch) -> None:
         """Verify Jinja2 templating works in unicode prompts."""
         monkeypatch.setattr(
-            'cookiecutter.prompt.read_user_variable',
+            'aiclimate.prompt.read_user_variable',
             lambda _var, default, _prompts, _prefix: default,
         )
         context = {
@@ -315,7 +315,7 @@ class TestPrompt:
     def test_dont_prompt_for_private_context_var(self, monkeypatch) -> None:
         """Verify `read_user_variable` not called for private context variables."""
         monkeypatch.setattr(
-            'cookiecutter.prompt.read_user_variable',
+            'aiclimate.prompt.read_user_variable',
             lambda _var, _default: pytest.fail(
                 'Should not try to read a response for private context var'
             ),
@@ -389,14 +389,14 @@ class TestReadUserChoice:
     def test_should_invoke_read_user_choice(self, mocker) -> None:
         """Verify correct function called for select(list) variables."""
         prompt_choice = mocker.patch(
-            'cookiecutter.prompt.prompt_choice_for_config',
+            'aiclimate.prompt.prompt_choice_for_config',
             wraps=prompt.prompt_choice_for_config,
         )
 
-        read_user_choice = mocker.patch('cookiecutter.prompt.read_user_choice')
+        read_user_choice = mocker.patch('aiclimate.prompt.read_user_choice')
         read_user_choice.return_value = 'all'
 
-        read_user_variable = mocker.patch('cookiecutter.prompt.read_user_variable')
+        read_user_variable = mocker.patch('aiclimate.prompt.read_user_variable')
 
         choices = ['landscape', 'portrait', 'all']
         context = {'cookiecutter': {'orientation': choices}}
@@ -412,12 +412,12 @@ class TestReadUserChoice:
 
     def test_should_invoke_read_user_variable(self, mocker) -> None:
         """Verify correct function called for string input variables."""
-        read_user_variable = mocker.patch('cookiecutter.prompt.read_user_variable')
+        read_user_variable = mocker.patch('aiclimate.prompt.read_user_variable')
         read_user_variable.return_value = 'Audrey Roy'
 
-        prompt_choice = mocker.patch('cookiecutter.prompt.prompt_choice_for_config')
+        prompt_choice = mocker.patch('aiclimate.prompt.prompt_choice_for_config')
 
-        read_user_choice = mocker.patch('cookiecutter.prompt.read_user_choice')
+        read_user_choice = mocker.patch('aiclimate.prompt.read_user_choice')
 
         context = {'cookiecutter': {'full_name': 'Your Name'}}
 
@@ -432,10 +432,10 @@ class TestReadUserChoice:
 
     def test_should_render_choices(self, mocker) -> None:
         """Verify Jinja2 templating engine works inside choices variables."""
-        read_user_choice = mocker.patch('cookiecutter.prompt.read_user_choice')
+        read_user_choice = mocker.patch('aiclimate.prompt.read_user_choice')
         read_user_choice.return_value = 'anewproject'
 
-        read_user_variable = mocker.patch('cookiecutter.prompt.read_user_variable')
+        read_user_variable = mocker.patch('aiclimate.prompt.read_user_variable')
         read_user_variable.return_value = 'A New Project'
 
         rendered_choices = ['foo', 'anewproject', 'bar']
@@ -488,7 +488,7 @@ class TestPromptChoiceForConfig:
         self, mocker, choices, context
     ) -> None:
         """Verify prompt_choice_for_config return first list option on no_input=True."""
-        read_user_choice = mocker.patch('cookiecutter.prompt.read_user_choice')
+        read_user_choice = mocker.patch('aiclimate.prompt.read_user_choice')
 
         expected_choice = choices[0]
 
@@ -505,7 +505,7 @@ class TestPromptChoiceForConfig:
 
     def test_should_read_user_choice(self, mocker, choices, context) -> None:
         """Verify prompt_choice_for_config return user selection on no_input=False."""
-        read_user_choice = mocker.patch('cookiecutter.prompt.read_user_choice')
+        read_user_choice = mocker.patch('aiclimate.prompt.read_user_choice')
         read_user_choice.return_value = 'all'
 
         expected_choice = 'all'
@@ -545,10 +545,10 @@ class TestReadUserYesNo:
     )
     def test_should_invoke_read_user_yes_no(self, mocker, run_as_docker) -> None:
         """Verify correct function called for boolean variables."""
-        read_user_yes_no = mocker.patch('cookiecutter.prompt.read_user_yes_no')
+        read_user_yes_no = mocker.patch('aiclimate.prompt.read_user_yes_no')
         read_user_yes_no.return_value = run_as_docker
 
-        read_user_variable = mocker.patch('cookiecutter.prompt.read_user_variable')
+        read_user_variable = mocker.patch('aiclimate.prompt.read_user_variable')
 
         context = {'cookiecutter': {'run_as_docker': run_as_docker}}
 
@@ -605,7 +605,7 @@ def test_undefined_variable(context) -> None:
 )
 def test_cookiecutter_nested_templates(template_dir: str, expected: Path | str) -> None:
     """Test nested_templates generation."""
-    from cookiecutter import prompt
+    from aiclimate import prompt
 
     main_dir = (Path("tests") / template_dir).resolve()
     cookiecuter_context = json.loads((main_dir / "cookiecutter.json").read_text())
@@ -626,7 +626,7 @@ def test_cookiecutter_nested_templates(template_dir: str, expected: Path | str) 
 )
 def test_cookiecutter_nested_templates_invalid_paths(path: str) -> None:
     """Test nested_templates generation."""
-    from cookiecutter import prompt
+    from aiclimate import prompt
 
     main_dir = (Path("tests") / "fake-nested-templates").resolve()
     cookiecuter_context = json.loads((main_dir / "cookiecutter.json").read_text())
@@ -648,7 +648,7 @@ def test_cookiecutter_nested_templates_invalid_paths(path: str) -> None:
 )
 def test_cookiecutter_nested_templates_invalid_win_paths(path: str) -> None:
     """Test nested_templates generation."""
-    from cookiecutter import prompt
+    from aiclimate import prompt
 
     main_dir = (Path("tests") / "fake-nested-templates").resolve()
     cookiecuter_context = json.loads((main_dir / "cookiecutter.json").read_text())
@@ -663,7 +663,7 @@ def test_prompt_should_ask_and_rm_repo_dir(mocker, tmp_path) -> None:
     """In `prompt_and_delete()`, if the user agrees to delete/reclone the \
     repo, the repo should be deleted."""
     mock_read_user = mocker.patch(
-        'cookiecutter.prompt.read_user_yes_no', return_value=True
+        'aiclimate.prompt.read_user_yes_no', return_value=True
     )
     repo_dir = Path(tmp_path, 'repo')
     repo_dir.mkdir()
@@ -679,7 +679,7 @@ def test_prompt_should_ask_and_exit_on_user_no_answer(mocker, tmp_path) -> None:
     """In `prompt_and_delete()`, if the user decline to delete/reclone the \
     repo, cookiecutter should exit."""
     mock_read_user = mocker.patch(
-        'cookiecutter.prompt.read_user_yes_no',
+        'aiclimate.prompt.read_user_yes_no',
         return_value=False,
     )
     mock_sys_exit = mocker.patch('sys.exit', return_value=True)
@@ -698,7 +698,7 @@ def test_prompt_should_ask_and_rm_repo_file(mocker, tmp_path) -> None:
     """In `prompt_and_delete()`, if the user agrees to delete/reclone a \
     repo file, the repo should be deleted."""
     mock_read_user = mocker.patch(
-        'cookiecutter.prompt.read_user_yes_no', return_value=True, autospec=True
+        'aiclimate.prompt.read_user_yes_no', return_value=True, autospec=True
     )
 
     repo_file = tmp_path.joinpath('repo.zip')
@@ -715,7 +715,7 @@ def test_prompt_should_ask_and_keep_repo_on_no_reuse(mocker, tmp_path) -> None:
     """In `prompt_and_delete()`, if the user wants to keep their old \
     cloned template repo, it should not be deleted."""
     mock_read_user = mocker.patch(
-        'cookiecutter.prompt.read_user_yes_no', return_value=False, autospec=True
+        'aiclimate.prompt.read_user_yes_no', return_value=False, autospec=True
     )
     repo_dir = Path(tmp_path, 'repo')
     repo_dir.mkdir()
@@ -735,7 +735,7 @@ def test_prompt_should_ask_and_keep_repo_on_reuse(mocker, tmp_path) -> None:
         return 'okay to delete' not in question
 
     mock_read_user = mocker.patch(
-        'cookiecutter.prompt.read_user_yes_no', side_effect=answer, autospec=True
+        'aiclimate.prompt.read_user_yes_no', side_effect=answer, autospec=True
     )
     repo_dir = Path(tmp_path, 'repo')
     repo_dir.mkdir()
@@ -754,7 +754,7 @@ def test_prompt_should_not_ask_if_no_input_and_rm_repo_dir(mocker, tmp_path) -> 
     `prompt.read_user_yes_no()` should be suppressed.
     """
     mock_read_user = mocker.patch(
-        'cookiecutter.prompt.read_user_yes_no', return_value=True, autospec=True
+        'aiclimate.prompt.read_user_yes_no', return_value=True, autospec=True
     )
     repo_dir = Path(tmp_path, 'repo')
     repo_dir.mkdir()
@@ -773,7 +773,7 @@ def test_prompt_should_not_ask_if_no_input_and_rm_repo_file(mocker, tmp_path) ->
     `prompt.read_user_yes_no()` should be suppressed.
     """
     mock_read_user = mocker.patch(
-        'cookiecutter.prompt.read_user_yes_no', return_value=True, autospec=True
+        'aiclimate.prompt.read_user_yes_no', return_value=True, autospec=True
     )
 
     repo_file = tmp_path.joinpath('repo.zip')

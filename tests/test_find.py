@@ -5,9 +5,9 @@ from pathlib import Path
 
 import pytest
 
-from cookiecutter import find
-from cookiecutter.exceptions import NonTemplatedInputDirException
-from cookiecutter.utils import create_env_with_context
+from aiclimate import find
+from aiclimate.exceptions import NonTemplatedInputDirException
+from aiclimate.utils import create_env_with_context
 
 
 @pytest.fixture(params=['fake-repo-pre', 'fake-repo-pre2'])

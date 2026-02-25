@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from cookiecutter import main
+from aiclimate import main
 
 
 @pytest.fixture(
@@ -33,7 +33,7 @@ def test_hook_with_extension(template, output_dir) -> None:
     Each file in hooks has simple tests inside and will raise error if not
     correctly rendered.
     """
-    project_dir = main.cookiecutter(
+    project_dir = main.generate_project(
         template,
         no_input=True,
         output_dir=output_dir,

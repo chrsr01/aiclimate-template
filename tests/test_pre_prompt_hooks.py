@@ -5,8 +5,8 @@ from pathlib import Path
 
 import pytest
 
-from cookiecutter import hooks, utils
-from cookiecutter.exceptions import FailedHookException
+from aiclimate import hooks, utils
+from aiclimate.exceptions import FailedHookException
 
 WINDOWS = sys.platform.startswith('win')
 

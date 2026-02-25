@@ -2,7 +2,7 @@
 
 import pytest
 
-from cookiecutter.prompt import read_user_variable
+from aiclimate.prompt import read_user_variable
 
 VARIABLE = 'project_name'
 DEFAULT = 'Kivy Project'

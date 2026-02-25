@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from cookiecutter import main
+from aiclimate import main
 
 
 @pytest.fixture
@@ -25,7 +25,7 @@ def test_build_templates(template, output_dir) -> None:
 
     no-templates is a compatibility tests for repo without `templates` directory
     """
-    project_dir = main.cookiecutter(
+    project_dir = main.generate_project(
         f'tests/test-templates/{template}',
         no_input=True,
         output_dir=output_dir,

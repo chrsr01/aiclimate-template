@@ -11,7 +11,7 @@ docs:
 servedocs:
     uv run --python=3.13 --isolated --group docs -- \
         sphinx-autobuild -Wa docs/ docs/_build/html --open-browser --port 9812 \
-            --watch cookiecutter
+            --watch aiclimate
 
 # lint with ruff
 lint:

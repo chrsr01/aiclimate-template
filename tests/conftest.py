@@ -7,11 +7,11 @@ from typing import TypedDict
 
 import pytest
 
-from cookiecutter import utils
-from cookiecutter.config import DEFAULT_CONFIG
+from aiclimate import utils
+from aiclimate.config import DEFAULT_CONFIG
 
 USER_CONFIG = """
-cookiecutters_dir: '{cookiecutters_dir}'
+templates_dir: '{templates_dir}'
 replay_dir: '{replay_dir}'
 """
 
@@ -21,9 +21,9 @@ def isolated_filesystem(monkeypatch, tmp_path) -> None:
     """Ensure filesystem isolation, set the user home to a tmp_path."""
     root_path = tmp_path.joinpath("home")
     root_path.mkdir()
-    cookiecutters_dir = root_path.joinpath(".cookiecutters/")
-    replay_dir = root_path.joinpath(".cookiecutter_replay/")
-    monkeypatch.setitem(DEFAULT_CONFIG, 'cookiecutters_dir', str(cookiecutters_dir))
+    templates_dir = root_path.joinpath(".aiclimate_templates/")
+    replay_dir = root_path.joinpath(".aiclimate_replay/")
+    monkeypatch.setitem(DEFAULT_CONFIG, 'templates_dir', str(templates_dir))
     monkeypatch.setitem(DEFAULT_CONFIG, 'replay_dir', str(replay_dir))
 
     monkeypatch.setenv("HOME", str(root_path))
@@ -78,29 +78,29 @@ def clean_system(request) -> None:
 
     During setup:
 
-    * Back up the `~/.cookiecutterrc` config file to `~/.cookiecutterrc.backup`
-    * Back up the `~/.cookiecutters/` dir to `~/.cookiecutters.backup/`
-    * Back up the `~/.cookiecutter_replay/` dir to
-      `~/.cookiecutter_replay.backup/`
-    * Starts off a test case with no pre-existing `~/.cookiecutterrc` or
-      `~/.cookiecutters/` or `~/.cookiecutter_replay/`
+    * Back up the `~/.aiclimaterc` config file to `~/.aiclimaterc.backup`
+    * Back up the `~/.aiclimate_templates/` dir to `~/.aiclimate_templates.backup/`
+    * Back up the `~/.aiclimate_replay/` dir to
+      `~/.aiclimate_replay.backup/`
+    * Starts off a test case with no pre-existing `~/.aiclimaterc` or
+      `~/.aiclimate_templates/` or `~/.aiclimate_replay/`
 
     During teardown:
 
-    * Delete `~/.cookiecutters/` only if a backup is present at
-      `~/.cookiecutters.backup/`
-    * Delete `~/.cookiecutter_replay/` only if a backup is present at
-      `~/.cookiecutter_replay.backup/`
-    * Restore the `~/.cookiecutterrc` config file from
-      `~/.cookiecutterrc.backup`
-    * Restore the `~/.cookiecutters/` dir from `~/.cookiecutters.backup/`
-    * Restore the `~/.cookiecutter_replay/` dir from
-      `~/.cookiecutter_replay.backup/`
+    * Delete `~/.aiclimate_templates/` only if a backup is present at
+      `~/.aiclimate_templates.backup/`
+    * Delete `~/.aiclimate_replay/` only if a backup is present at
+      `~/.aiclimate_replay.backup/`
+    * Restore the `~/.aiclimaterc` config file from
+      `~/.aiclimaterc.backup`
+    * Restore the `~/.aiclimate_templates/` dir from `~/.aiclimate_templates.backup/`
+    * Restore the `~/.aiclimate_replay/` dir from
+      `~/.aiclimate_replay.backup/`
 
     """
-    # If ~/.cookiecutterrc is pre-existing, move it to a temp location
-    user_config_path = os.path.expanduser('~/.cookiecutterrc')
-    user_config_path_backup = os.path.expanduser('~/.cookiecutterrc.backup')
+    # If ~/.aiclimaterc is pre-existing, move it to a temp location
+    user_config_path = os.path.expanduser('~/.aiclimaterc')
+    user_config_path_backup = os.path.expanduser('~/.aiclimaterc.backup')
     if os.path.exists(user_config_path):
         user_config_found = True
         shutil.copy(user_config_path, user_config_path_backup)
@@ -108,39 +108,39 @@ def clean_system(request) -> None:
     else:
         user_config_found = False
 
-    # If the default cookiecutters_dir is pre-existing, move it to a
+    # If the default templates_dir is pre-existing, move it to a
     # temp location
-    cookiecutters_dir = os.path.expanduser('~/.cookiecutters')
-    cookiecutters_dir_backup = os.path.expanduser('~/.cookiecutters.backup')
-    cookiecutters_dir_found = backup_dir(cookiecutters_dir, cookiecutters_dir_backup)
+    templates_dir = os.path.expanduser('~/.aiclimate_templates')
+    templates_dir_backup = os.path.expanduser('~/.aiclimate_templates.backup')
+    templates_dir_found = backup_dir(templates_dir, templates_dir_backup)
 
-    # If the default cookiecutter_replay_dir is pre-existing, move it to a
+    # If the default aiclimate_replay_dir is pre-existing, move it to a
     # temp location
-    cookiecutter_replay_dir = os.path.expanduser('~/.cookiecutter_replay')
-    cookiecutter_replay_dir_backup = os.path.expanduser('~/.cookiecutter_replay.backup')
-    cookiecutter_replay_dir_found = backup_dir(
-        cookiecutter_replay_dir, cookiecutter_replay_dir_backup
+    aiclimate_replay_dir = os.path.expanduser('~/.aiclimate_replay')
+    aiclimate_replay_dir_backup = os.path.expanduser('~/.aiclimate_replay.backup')
+    aiclimate_replay_dir_found = backup_dir(
+        aiclimate_replay_dir, aiclimate_replay_dir_backup
     )
 
     def restore_backup() -> None:
-        # If it existed, restore ~/.cookiecutterrc
-        # We never write to ~/.cookiecutterrc, so this logic is simpler.
+        # If it existed, restore ~/.aiclimaterc
+        # We never write to ~/.aiclimaterc, so this logic is simpler.
         if user_config_found and os.path.exists(user_config_path_backup):
             shutil.copy(user_config_path_backup, user_config_path)
             os.remove(user_config_path_backup)
 
-        # Carefully delete the created ~/.cookiecutters dir only in certain
+        # Carefully delete the created ~/.aiclimate_templates dir only in certain
         # conditions.
         restore_backup_dir(
-            cookiecutters_dir, cookiecutters_dir_backup, cookiecutters_dir_found
+            templates_dir, templates_dir_backup, templates_dir_found
         )
 
-        # Carefully delete the created ~/.cookiecutter_replay dir only in
+        # Carefully delete the created ~/.aiclimate_replay dir only in
         # certain conditions.
         restore_backup_dir(
-            cookiecutter_replay_dir,
-            cookiecutter_replay_dir_backup,
-            cookiecutter_replay_dir_found,
+            aiclimate_replay_dir,
+            aiclimate_replay_dir_backup,
+            aiclimate_replay_dir_found,
         )
 
     request.addfinalizer(restore_backup)
@@ -153,7 +153,7 @@ def user_dir(tmp_path_factory):
 
 
 class UserConfigData(TypedDict):
-    cookiecutters_dir: str
+    templates_dir: str
     replay_dir: str
 
 
@@ -163,17 +163,17 @@ def user_config_data(user_dir) -> UserConfigData:
 
      It will create it in the user's home directory.
 
-    * `cookiecutters_dir`
-    * `cookiecutter_replay`
+    * `templates_dir`
+    * `aiclimate_replay`
 
     :returns: Dict with name of both user config dirs
     """
-    cookiecutters_dir = user_dir.joinpath('cookiecutters')
-    cookiecutters_dir.mkdir()
-    replay_dir = user_dir.joinpath('cookiecutter_replay')
+    templates_dir = user_dir.joinpath('templates')
+    templates_dir.mkdir()
+    replay_dir = user_dir.joinpath('aiclimate_replay')
     replay_dir.mkdir()
     return {
-        'cookiecutters_dir': str(cookiecutters_dir),
+        'templates_dir': str(templates_dir),
         'replay_dir': str(replay_dir),
     }
 

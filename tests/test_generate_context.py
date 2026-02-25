@@ -10,9 +10,9 @@ from typing import Any
 
 import pytest
 
-from cookiecutter import generate
-from cookiecutter.exceptions import ContextDecodingException
-from cookiecutter.prompt import YesNoPrompt
+from aiclimate import generate
+from aiclimate.exceptions import ContextDecodingException
+from aiclimate.prompt import YesNoPrompt
 
 
 def context_data() -> Iterator[tuple[dict[str, Any], dict[str, Any]]]:

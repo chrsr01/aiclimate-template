@@ -9,8 +9,8 @@ import pytest
 from jinja2 import FileSystemLoader
 from jinja2.exceptions import TemplateSyntaxError
 
-from cookiecutter import generate
-from cookiecutter.environment import StrictEnvironment
+from aiclimate import generate
+from aiclimate.environment import StrictEnvironment
 
 
 @pytest.fixture(scope='function', autouse=True)

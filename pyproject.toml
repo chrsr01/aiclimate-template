@@ -1,13 +1,13 @@
 [project]
-name = "cookiecutter"
-version = "2.6.0"
-description = "A command-line utility that creates projects from project templates, e.g. creating a Python package project from a Python package project template."
+name = "aiclimate"
+version = "0.1.0"
+description = "A CLI tool that scaffolds Python ML/data science projects for AI in climate and environmental sciences research."
 readme = "README.md"
-authors = [{ name = "Audrey Roy Greenfeld", email = "audrey@feldroy.com" }]
+authors = [{ name = "AI for Climate and Environmental Sciences" }]
 classifiers = [
-    "Development Status :: 5 - Production/Stable",
+    "Development Status :: 3 - Alpha",
     "Environment :: Console",
-    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
     "Natural Language :: English",
     "Programming Language :: Python :: 3 :: Only",
     "Programming Language :: Python :: 3",
@@ -17,21 +17,18 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: Implementation :: CPython",
-    "Programming Language :: Python :: Implementation :: PyPy",
     "Programming Language :: Python",
-    "Topic :: Software Development",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Atmospheric Science",
 ]
 keywords = [
-    "cookiecutter",
-    "Python",
-    "projects",
-    "project templates",
-    "Jinja2",
-    "skeleton",
+    "aiclimate",
+    "machine-learning",
+    "climate-science",
+    "project-template",
     "scaffolding",
-    "project directory",
-    "package",
-    "packaging",
+    "environmental-science",
+    "data-science",
 ]
 dependencies = [
     "binaryornot>=0.4.4",
@@ -46,13 +43,10 @@ dependencies = [
 requires-python = ">=3.10"
 
 [project.urls]
-Homepage = "https://github.com/cookiecutter/cookiecutter"
-Documentation = "https://cookiecutter.readthedocs.io"
-Issues = "https://github.com/cookiecutter/cookiecutter/issues"
-Discord = "https://discord.gg/9BrxzPKuEW"
+Homepage = "https://github.com/aiclimate/aiclimate"
 
 [project.scripts]
-cookiecutter = "cookiecutter.__main__:main"
+aiclimate = "aiclimate.__main__:main"
 
 [dependency-groups]
 dev = [
@@ -85,41 +79,32 @@ lint = [
 
 [tool.pytest.ini_options]
 testpaths = "tests"
-addopts = "-vvv --cov-report term-missing --cov=cookiecutter"
+addopts = "-vvv --cov-report term-missing --cov=aiclimate"
 
 [tool.doc8]
-# TODO: Remove current max-line-length ignore in follow-up and adopt black limit.
-# max-line-length = 88
 ignore = ["D001"]
 
 [tool.ruff]
 
 target-version = "py310"
+extend-exclude = ["aiclimate/_builtin_template"]
 
 [tool.ruff.lint]
 
 select = [
     "A", # flake8-builtins
-    #    "ANN", # flake8-annotations
     "ARG",   # flake8-unused-arguments
     "ASYNC", # flake8-async
     "B",     # flake8-bugbear
-    #    "BLE",    # flake8-blind-except
     "C4", # flake8-comprehensions
-    #    "C90",    # cognitive complexity
-    #    "COM",    # flake8-commas
-    #    "D", # pydocstyle
     "DTZ", # flake8-datetimez
     "E",   # pycodestyle errors
     "EM",  # flake8-errmsg
-    #    "ERA",    # flake8-eradicate
     "EXE", # flake8-executable
     "F",   # pyflakes
     "FA",  # flake8-future-annotations
-    #    "FBT",    # boolean trap
     "FLY",  # flynt
     "FURB", # refurb
-    #    "G",      # flake8-logging-format
     "I",    # isort
     "ICN",  # flake8-import-conventions
     "INT",  # flake8-gettext
@@ -129,11 +114,6 @@ select = [
     "PERF", # perflint
     "PGH",  # pygrep-hooks
     "PIE",  # flake8-pie
-    #    "PL",     # pylint
-    #    "PT",     # flake8-pytest-style
-    #    "PTH",    # flake8-use-pathlib
-    #    "PYI",    # flake8-pyi
-    #    "Q",      # flake8-quotes
     "RET",  # flake8-return
     "RSE",  # flake8-raise
     "RUF",  # Ruff-specific lints
@@ -141,7 +121,6 @@ select = [
     "SIM",  # flake8-simplify
     "SLF",  # flake8-self
     "SLOT", # flake8-slots
-    #    "T20",    # flake8-print
     "TCH", # flake8-type-checking
     "TID", # ban relative imports
     "TRY", # tryceratops
@@ -149,8 +128,6 @@ select = [
     "W",   # pycodestyle warnings
     "YTT", # flake8-2020
 ]
-
-# pydocstyle.convention = "google"
 
 ignore = [
     "B028",   # No explicit `stacklevel` keyword argument found
@@ -174,7 +151,7 @@ exclude = ["tests/**/hooks/*"]
     "S106", # Possible hardcoded password assigned to argument: "password"
     "S108", # Probable insecure usage of temporary file or directory: "/tmp"
 ]
-"cookiecutter/*" = [
+"aiclimate/*" = [
     "S603", # `subprocess` call: check for execution of untrusted input"
 ]
 "docs/conf.py" = ["A001", "D100"]
@@ -188,14 +165,14 @@ exclude = ["tests/hooks-abort-render/hooks/*"]
 [tool.mypy]
 strict = true
 show_error_codes = true
-files = ["cookiecutter", "tests"]
+files = ["aiclimate", "tests"]
 exclude = "(?x)(/hooks/ | tests/test-output-folder/)"
 no_implicit_reexport = true
 
 
 [[tool.mypy.overrides]]
 module = [
-    "cookiecutter.prompt",
+    "aiclimate.prompt",
 ]
 ignore_errors = true
 
@@ -210,16 +187,14 @@ exclude_also = ["if TYPE_CHECKING:"]
 
 [tool.coverage.run]
 omit = [
-    "cookiecutter/__main__.py",
+    "aiclimate/__main__.py",
 ]
 
 [tool.uv]
-# Treat this repo as an installable *package*, not just a “virtual” project.
-# Result: `uv sync` / `uv run` will install *this library itself* into the venv in
-# editable (meaning: linked to your working tree) mode, not only its dependencies.
-# This enables entry points (meaning: auto-created CLI scripts), plugin discovery,
-# and proper distribution metadata (meaning: standard package info used by tools).
 package = true
 
 [tool.setuptools]
-packages = ["cookiecutter"]
+packages = ["aiclimate"]
+
+[tool.setuptools.package-data]
+aiclimate = ["VERSION.txt", "_builtin_template/**/*", "_builtin_template/**/.*"]

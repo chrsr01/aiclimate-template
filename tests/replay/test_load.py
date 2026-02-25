@@ -5,7 +5,7 @@ import os
 
 import pytest
 
-from cookiecutter import replay
+from aiclimate import replay
 
 
 @pytest.fixture

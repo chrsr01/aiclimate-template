@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from cookiecutter import generate, utils
+from aiclimate import generate, utils
 
 
 @pytest.fixture

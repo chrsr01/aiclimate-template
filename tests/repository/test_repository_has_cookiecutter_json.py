@@ -1,13 +1,13 @@
-"""Tests for `repository_has_cookiecutter_json` function."""
+"""Tests for `repository_has_template_config` function."""
 
 import pytest
 
-from cookiecutter.repository import repository_has_cookiecutter_json
+from aiclimate.repository import repository_has_template_config
 
 
 def test_valid_repository() -> None:
     """Validate correct response if `cookiecutter.json` file exist."""
-    assert repository_has_cookiecutter_json('tests/fake-repo')
+    assert repository_has_template_config('tests/fake-repo')
 
 
 @pytest.mark.parametrize(
@@ -15,4 +15,4 @@ def test_valid_repository() -> None:
 )
 def test_invalid_repository(invalid_repository) -> None:
     """Validate correct response if `cookiecutter.json` file not exist."""
-    assert not repository_has_cookiecutter_json(invalid_repository)
+    assert not repository_has_template_config(invalid_repository)
